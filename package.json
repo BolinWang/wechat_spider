@@ -1,0 +1,48 @@
+{
+  "name": "wechat_spider",
+  "version": "1.1.1",
+  "description": "wechat spider by Man-in-the-middle attack",
+  "main": "index.js",
+  "scripts": {
+    "start": "DEBUG=ws:* NODE_ENV=production node index.js",
+    "dev": "DEBUG=ws:* nodemon index.js --ignore client/ --ignore test/",
+    "build": "pm2 start index.js --name=\"wechat_spider\"",
+    "mp": "DEBUG=ws:mp* node second/task.js",
+    "test": "mocha --recursive --exit --timeout 10000"
+  },
+  "author": "bolin",
+  "license": "MIT",
+  "dependencies": {
+    "anyproxy": "^4.0.5",
+    "cheerio": "^1.0.0-rc.2",
+    "debug": "^4.0.1",
+    "ejs": "^2.5.7",
+    "express": "^4.15.4",
+    "ip": "^1.1.5",
+    "json2csv": "^3.11.2",
+    "lodash": "^4.17.11",
+    "moment": "^2.21.0",
+    "mongoose": "^5.0.10",
+    "morgan": "^1.8.2",
+    "motime": "^0.0.2",
+    "redis": "^2.8.0",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "nodemon": "^1.11.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lqqyt2423/wechat_spider.git"
+  },
+  "keywords": [
+    "wechat",
+    "spider"
+  ],
+  "bugs": {
+    "url": "https://github.com/BolinWang/wechat_spider/issues"
+  },
+  "homepage": "https://github.com/BolinWang/wechat_spider#readme"
+}

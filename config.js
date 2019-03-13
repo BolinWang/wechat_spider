@@ -56,8 +56,8 @@ const config = {
       jumpInterval: 2,
 
       // 跳转文章发布时间范围
-      minTime: new Date('2018-1-1'),
-      maxTime: new Date('2018-7-1'),
+      minTime: new Date('2010-1-1'),
+      maxTime: new Date('2010-1-1'),
 
       // 已经抓取过的文章是否需要再次抓取
       isCrawlExist: false,
@@ -68,7 +68,7 @@ const config = {
 
       // 抓取公众号 biz 范围 [string]
       // 为空表示不限制范围
-      targetBiz: [],
+      targetBiz: ['MjM5ODQzNjAwMA=='],
 
       // 是否保存微信文章内容
       // 内容占用很多空间，尤其是html形式
@@ -88,14 +88,14 @@ const config = {
       // 页面会自动下拉
       // 下拉至此项设置的时间便会停止
       // 然后跳转至下一个公众号历史页面
-      minTime: new Date('2018-1-1'),
+      minTime: new Date('2010-1-1'),
 
       // 控制在此时间后已经抓取过的公众号本次就不用再抓取了
-      maxUpdatedAt: new Date('2018-7-1'),
+      maxUpdatedAt: new Date('2010-1-1'),
 
       // 抓取公众号 biz 范围 [string]
       // 为空表示不限制范围
-      targetBiz: [],
+      targetBiz: ['MjM5ODQzNjAwMA==']
     },
 
     // 功能：是否抓取评论
@@ -130,12 +130,12 @@ if (process.env.DEPLOY === 'docker') {
 
 
 // 加载自定义的配置
-try {
-  const myConfig = require('./my_config.json');
-  merge(config, myConfig);
-} catch(e) {
-  // console.log(e);
-  // Do nothing
-}
+// try {
+//   const myConfig = require('./my_config.json');
+//   merge(config, myConfig);
+// } catch(e) {
+//   // console.log(e);
+//   // Do nothing
+// }
 
 module.exports = config;

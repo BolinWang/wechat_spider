@@ -7,6 +7,7 @@ const config = require('../config');
 const cheerio = require('cheerio');
 const redis = require('../utils/redis');
 const debug = require('../utils/debug')('wechatRule');
+const GetBasicInfo = require('../utils/GetBasicInfo')
 
 const {
   rule: ruleConfig,
@@ -69,11 +70,12 @@ const getReadAndLikeNum = async function (ctx) {
   }
 };
 
+// 获取文章信息
 const getPostBasicInfo = async function (ctx) {
-  if (!isPostPage(ctx)) return;
+  if (!isPostPage(ctx)) return
 
   const { req, res } = ctx;
-  const link = req.url;
+  const link = req.url.replace(/&amp;/g, '&');
   const body = res.response.body.toString();
 
   const urlObj = url.parse(link, true);
@@ -90,7 +92,6 @@ const getPostBasicInfo = async function (ctx) {
     );
     return;
   }
-
 
   // 若数据库中不存在此篇文章 则更新基础信息
   await models.Post.findOne({ msgBiz, msgMid, msgIdx }).then(post => {
@@ -184,6 +185,7 @@ const handlePostHtml = async function (ctx) {
   };
 };
 
+// 获取评论数据
 const getComments = async function (ctx) {
   if (!isCrawlComments) return;
 
@@ -254,6 +256,7 @@ const getComments = async function (ctx) {
   }
 };
 
+//
 const getProfileBasicInfo = async function (ctx) {
   const { req, res } = ctx;
   const link = req.url;
@@ -306,6 +309,7 @@ const getProfileBasicInfo = async function (ctx) {
   }
 };
 
+// 获取文章列表
 const getPostList = async function (ctx) {
   const { req, res } = ctx;
   const link = req.url;
@@ -322,12 +326,14 @@ const getPostList = async function (ctx) {
   }
 };
 
+// 注入js中间人攻击
 const handleProfileHtml = async function (ctx) {
   const { req, res } = ctx;
   const link = req.url;
   if (!/\/mp\/profile_ext\?action=home&__biz=/.test(link)) return;
 
   let { minTime, jumpInterval } = profileConfig;
+  debug('profileMinTime', minTime)
 
   const urlObj = url.parse(link, true);
   const msgBiz = urlObj.query.__biz;
@@ -458,7 +464,7 @@ const handleProfileHtml = async function (ctx) {
   };
 };
 
-// 存文章基本信息至数据库
+// 存文章列表的基本信息至数据库
 async function savePostsData(postList) {
   const posts = [];
   postList.forEach(post => {
@@ -515,7 +521,26 @@ async function savePostsData(postList) {
     debug('剩余公众号抓取长度:', len);
     debug();
   });
+
+  savedPosts.map(post => doGetHtml(post.link))
 }
+
+async function doGetHtml(link) {
+  const getBasicInfo = new GetBasicInfo({ link })
+  const body = await getBasicInfo.getBody()
+  const ctx = {
+    req: {
+      url: link
+    },
+    res: {
+      response: {
+        body
+      }
+    }
+  }
+  getPostBasicInfo(ctx)
+}
+
 
 function isPostPage(ctx) {
   const { req } = ctx;

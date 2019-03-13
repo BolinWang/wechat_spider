@@ -468,6 +468,7 @@ const handleProfileHtml = async function (ctx) {
 async function savePostsData(postList) {
   const posts = [];
   postList.forEach(post => {
+    // 不是文章不存 - app_msg_ext_info对象
     const appMsg = post.app_msg_ext_info;
     if (!appMsg) return;
     const publishAt = new Date(post.comm_msg_info.datetime * 1000);
@@ -483,14 +484,14 @@ async function savePostsData(postList) {
   let savedPosts = await Promise.all(posts.map(post => {
     const { appMsg, publishAt } = post;
     const title = appMsg.title;
-    const link = appMsg.content_url;
+    const link = appMsg.content_url.replace(/&amp;/g, '&');
     if (!(title && link)) return;
 
     const urlObj = url.parse(link, true);
     const { query } = urlObj;
     let { __biz, mid, idx } = query;
-    if (!mid) mid = query['amp;mid'];
-    if (!idx) idx = query['amp;idx'];
+    // if (!mid) mid = query['amp;mid'];
+    // if (!idx) idx = query['amp;idx'];
     const [msgBiz, msgMid, msgIdx] = [__biz, mid, idx];
 
     const [cover, digest, sourceUrl] = [appMsg.cover, appMsg.digest, appMsg.source_url];

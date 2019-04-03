@@ -387,7 +387,8 @@ const handleProfileHtml = async function (ctx) {
       const isScrollFn = time => {
         let contentText = document.querySelector('.weui-panel').innerText;
         contentText = contentText.trim();
-        const contentArr = contentText.split('\\n');
+        // 去除中间的空行
+        const contentArr = contentText.split('\\n').filter(i => i);
 
         // 最后一行表示目前抓取的状态
         // 正在加载
@@ -608,4 +609,5 @@ module.exports = {
   getProfileBasicInfo,
   getPostList,
   handleProfileHtml,
+  getNextPostLink
 };
